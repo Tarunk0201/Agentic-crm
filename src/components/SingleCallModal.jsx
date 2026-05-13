@@ -32,7 +32,7 @@ function SingleCallModal({ isOpen, onClose }) {
 
     try {
       const response = await fetch(
-        `${API_BASE_URL}/api/agent/trigger_ai_call`,
+        `${API_BASE_URL}/api/ivr-agent/trigger_ai_call`,
         {
           method: "POST",
           headers: {

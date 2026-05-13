@@ -20,7 +20,7 @@ function CallLogItem({ call, active, onClick }) {
               {call.customerName}
             </p>
 
-            <p className="mb-2 text-lg text-zinc-500"> +{call.to}</p>
+            <p className="mb-2 text-lg text-zinc-500"> {call.to}</p>
           </div>
           <p className="text-xs text-zinc-500">From {call.from}</p>
         </div>

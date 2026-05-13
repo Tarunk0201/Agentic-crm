@@ -84,7 +84,7 @@ function ContactsPage() {
     if (!contactToCall) return;
 
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-    const url = `${API_BASE_URL}/api/agent/trigger_ai_call`;
+    const url = `${API_BASE_URL}/api/ivr-agent/trigger_ai_call`;
 
     try {
       const response = await fetch(url, {

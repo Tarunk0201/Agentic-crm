@@ -42,6 +42,11 @@ function VoiceCallLogsPage() {
   const { tokens, setTokens } = useAuth();
   const navigate = useNavigate();
 
+  const handleCallSelection = (callId) => {
+    setSelectedCallId(callId);
+    setActiveTab("Call Details");
+  };
+
   const fetchCalls = async () => {
     if (!tokens.accessToken) {
       setError("Authentication token not found. Please log in.");
@@ -53,7 +58,7 @@ function VoiceCallLogsPage() {
     setError(null);
 
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-    const url = `${API_BASE_URL}/api/agent/calls?page=${pagination.currentPage}&limit=${pagination.limit}`;
+    const url = `${API_BASE_URL}/api/ivr-agent/calls?page=${pagination.currentPage}&limit=${pagination.limit}`;
 
     try {
       const response = await fetch(url, {
@@ -85,6 +90,8 @@ function VoiceCallLogsPage() {
           hour: "2-digit",
           minute: "2-digit",
         }),
+        hasTranscript: call.Transcript,
+        hasMeeting: call.Meeting,
       }));
       setCalls(formattedCalls);
       if (formattedCalls.length > 0) {
@@ -108,7 +115,7 @@ function VoiceCallLogsPage() {
     setCallDetails(null); // Reset previous details
 
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-    const url = `${API_BASE_URL}/api/agent/conversation/${selectedCallId}`;
+    const url = `${API_BASE_URL}/api/ivr-agent/conversation/${selectedCallId}`;
 
     try {
       const response = await fetch(url, {
@@ -145,7 +152,7 @@ function VoiceCallLogsPage() {
     setTranscript([]);
 
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-    const url = `${API_BASE_URL}/api/agent/transcript/${selectedCallId}`;
+    const url = `${API_BASE_URL}/api/ivr-agent/transcript/${selectedCallId}`;
 
     try {
       const response = await fetch(url, {
@@ -180,10 +187,16 @@ function VoiceCallLogsPage() {
 
   useEffect(() => {
     if (selectedCallId) {
+      const call = calls.find((c) => c.id === selectedCallId);
       fetchCallDetails();
-      fetchTranscript();
+      if (call?.hasTranscript) {
+        fetchTranscript();
+      } else {
+        setTranscript([]);
+        setTranscriptError(null);
+      }
     }
-  }, [selectedCallId, tokens.accessToken]);
+  }, [selectedCallId, tokens.accessToken, calls]);
 
   const filteredCalls = useMemo(() => {
     let filtered = calls;
@@ -235,12 +248,11 @@ function VoiceCallLogsPage() {
   const selectedCall =
     filteredCalls.find((c) => c.id === selectedCallId) || filteredCalls[0];
 
-  const availableTabs = [
-    "Call Details",
-    "Transcript",
-    // "Recording"
-  ];
-  if (callDetails?.meetingSummary) {
+  const availableTabs = ["Call Details"];
+  if (selectedCall?.hasTranscript) {
+    availableTabs.push("Transcript");
+  }
+  if (selectedCall?.hasMeeting) {
     availableTabs.push("Calendar");
   }
   availableTabs.push("More");
@@ -268,7 +280,7 @@ function VoiceCallLogsPage() {
           <CallList
             calls={filteredCalls}
             selectedCallId={selectedCall?.id}
-            setSelectedCallId={setSelectedCallId}
+            setSelectedCallId={handleCallSelection}
           />
         </section>
         <section className="glass flex min-h-0 flex-col rounded-[14px] p-3">
@@ -278,7 +290,7 @@ function VoiceCallLogsPage() {
             </h2>
             {selectedCall && (
               <p className="text-sm text-zinc-500">
-                {selectedCall.id} • {selectedCall.status}
+                {selectedCall.to} • {selectedCall.status}
               </p>
             )}
           </div>
