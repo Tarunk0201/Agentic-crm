@@ -39,7 +39,10 @@ function SingleCallModal({ isOpen, onClose }) {
             "Content-Type": "application/json",
             Authorization: `Bearer ${tokens.accessToken}`,
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify({
+            action_name: `Single Call - ${formData.name}`,
+            ...formData,
+          }),
         },
       );
 
