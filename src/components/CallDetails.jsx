@@ -20,7 +20,7 @@ function CallDetails({ call, loading }) {
   const { timeline, ...details } = call;
 
   const detailRows = [
-    { label: "To", value: "+" + details.to },
+    { label: "To", value: details.to },
     { label: "From", value: details.from },
     { label: "Customer Name", value: details.customerName },
     { label: "Call Status", value: details.callStatus },

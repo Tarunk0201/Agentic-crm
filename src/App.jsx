@@ -5,6 +5,7 @@ import BulkActionsPage from "./pages/BulkActionsPage";
 import VoiceCallLogsPage from "./pages/VoiceCallLogsPage";
 import MeetingsPage from "./pages/MeetingsPage";
 import LoginPage from "./pages/LoginPage";
+import ScriptFlow from "./pages/ScriptFlow";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/bulk-actions" element={<BulkActionsPage />} />
         <Route path="/logs" element={<VoiceCallLogsPage />} />
         <Route path="/meetings" element={<MeetingsPage />} />
+        <Route path="/script-flow" element={<ScriptFlow />} />
         <Route
           path="/smart-lists"
           element={<div className="p-6">Smart Lists Page (Coming Soon)</div>}
